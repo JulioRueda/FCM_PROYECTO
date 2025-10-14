@@ -1,1 +1,26 @@
 # Configuración inicial del proyecto
+defaults:
+  - dataset: mnist
+  - experiment: base
+  - override hydra/sweeper: basic
+
+base:
+  seed: 42
+  subsets: 2 #a partir de 2
+  tol: 0.1
+  m: 2.0
+  n_neurons: 400
+
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      experiment.seed: 42, 52
+      experiment.subsets: 2, 4, 8, 16, 34, 64, 128
+      experiment.tol: 0.1
+      experiment.m: 2.0
+
+mlflow:
+  tracking_uri: "file:./mlruns"
+  experiment_name: "Prueba_unitaria_n_400"

@@ -16,3 +16,4 @@ data/processed/*
 
 # MLflow
 mlruns/
+multirun/

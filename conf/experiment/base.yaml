@@ -1,0 +1,5 @@
+  seed: 42
+  subsets: 2 #a partir de 2
+  tol: 0.1
+  m: 2.0
+  n_neurons: 400
