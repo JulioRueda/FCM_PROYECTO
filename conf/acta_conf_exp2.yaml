@@ -1,0 +1,19 @@
+# Configuración inicial del proyecto
+defaults:
+  - dataset: mnist
+  - experiment: base
+  - override hydra/sweeper: basic
+
+hydra:
+  mode: MULTIRUN
+  sweeper:
+    params:
+      experiment.seed: 42, 52, 12, 10, 20, 26, 100, 50, 9, 88
+      experiment.subsets: 2, 4, 8, 16, 32, 64, 128
+      experiment.tol: 0.1
+      experiment.m: 2.0
+      experiment.n_neurons: 400
+
+mlflow:
+  tracking_uri: "file:./mlruns"
+  experiment_name: "PRUEBA0_ACTA4_exp2"
