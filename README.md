@@ -5,6 +5,6 @@
 
 2) crear la carpeta data/processed para guardar los ensayos
 
-3) ejecutar python src/experiment.py --config-name=config
+3) ejecutar python src/experiment.py --config-name
 
 

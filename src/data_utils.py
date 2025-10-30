@@ -15,7 +15,11 @@ def load_dataset(DATASET_ID, DATASET_PATH):
     fashion = pd.read_csv(DATASET_PATH, header=None)
     mat_I = fashion.drop(columns=[0], axis=1, inplace=False)
     mat_gt= fashion[[0]] + 1
-  
+  elif DATASET_ID == "cifar10":
+    cifar10 = pd.read_csv(DATASET_PATH, header=None)
+    mat_I = cifar10.drop(columns=[0], axis=1, inplace=False)
+    mat_gt= cifar10[[0]] + 1
+
   I     = []  #Hyperspectral input image
 
   match DATASET_ID:
@@ -43,6 +47,9 @@ def load_dataset(DATASET_ID, DATASET_PATH):
     case "fashion":
       I = mat_I.to_numpy()
       gt= mat_gt.to_numpy()
+    case "cifar10":
+      I = mat_I.to_numpy()
+      gt= mat_gt.to_numpy() 
     case _:
       print("Unrecognized dataset")
 
@@ -361,6 +368,22 @@ def FetchInformativeSamples(_M, _T_hat, _phi, _theta, _C):
     E = {'X':X_salida.to_numpy(), 'y':Y_salida.to_numpy().ravel(), 'idxs':_T_hat['idxs'][X_salida.index]} # Select corresponding rows from idxs and ravel y
     return E
 
+def FetchInformativeProba(_M, _T_hat, _phi, _theta, _C):
+  y_preds = _M.predict(_T_hat['X'])
+  absolute_diff = []
+  for row in y_preds:
+    absolute_diff.append(np.abs(np.sort(row)[-2:][0] - np.sort(row)[-2:][1]))
+
+  X = pd.DataFrame(_T_hat['X'])
+  Y = pd.DataFrame(_T_hat['y'])
+  X__ = X.copy()
+  X__['decision'] = [dif_i<_phi for dif_i in absolute_diff]
+
+  X_salida = X__.loc[X__['decision'] == True].drop(columns='decision')
+  Y_salida = Y.loc[X_salida.index] # Select corresponding rows from Y
+
+  E = {'X':X_salida.to_numpy(), 'y':Y_salida.to_numpy().ravel(), 'idxs':_T_hat['idxs'][X_salida.index]} # Select corresponding rows from idxs and ravel y
+  return E
 
 def getPartition(_T, _K, _random_state=None):
   if _random_state != None:
